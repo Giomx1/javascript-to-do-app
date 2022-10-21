@@ -1,35 +1,49 @@
-let form = document.querySelector('form')
-let ul = document.querySelector('ul')
-let button = document.querySelector('button')
-let input = document.getElementById('item')
-let todos = localStorage.getItem('toDoItems') ? JSON.parse(localStorage.getItem('toDoItems')): []
+let todoInput = document.getElementById('todo-input');
+const toDoItemsList = document.getElementById('todo-items');
+let addButton = document.getElementById("add-button")
+let todos = [];
+let button = document.querySelector("input")
+let itemList = document.createElement("li");
+let deleteButton = document.createElement("button");
 
+button.addEventListener('click', function handleClick(event) {
+ let todoInput = document.getElementById('todo-input');
+ todoInput.value = "";
+});
 
+function addItem(){
+  let itemList = document.createElement("li");
+  itemList.innerText = todoInput.value;
+  toDoItemsList.appendChild(itemList);
 
-localStorage.setItem('toDoItems', JSON.stringify(todos))
-const data = JSON.parse(localStorage.getItem('toDoItems'))
-
-function createLi(userInput) {
-  const li = document.createElement('li')
-  li.textContent = userInput;
-  ul.appendChild(li)
+  if(todoInput.value === ""){
+     toDoItemsList.removeChild(itemList);  
+  }
 }
 
-form.addEventListener('submit', function (e) {
-  e.preventDefault()
-  todos.push(input.value)
-  localStorage.setItem('toDoItems', JSON.stringify(todos))
-  createLi(input.value)
-  input.value = "";
-})
 
-data.forEach((item) => {
-  createLi(item)
-})
-
-button.addEventListener('click', function () {
-  localStorage.clear()
-  while (ul.firstChild) {
-    ul.removeChild(ul.firstChild)
+ itemList.addEventListener("click", exButton)
+  function exButton(){
+    let deleteButton = document.createElement("button");
+    deleteButton.innerHTML = "X";
+    itemList.appendChild(deleteButton)
+    itemList.removeEventListener("click", exButton)
+   
   }
-})
+
+ deleteButton.addEventListener("click", deleteItem)
+    function deleteItem(){
+      toDoItemsList.removeChild(itemList);
+    } 
+    
+
+  const makeObject = {
+  toDoText: todoInput.value,
+  id: Math.floor(Math.random() * 100),
+};
+
+todos.push(makeObject);
+  
+  function addToLocalStorage(todos) {
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
