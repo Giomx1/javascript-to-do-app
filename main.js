@@ -15,6 +15,7 @@ function addItem(){
   let itemList = document.createElement("li");
   itemList.innerText = todoInput.value;
   toDoItemsList.appendChild(itemList);
+  exButton()
 
   if(todoInput.value === ""){
      toDoItemsList.removeChild(itemList);  
@@ -28,6 +29,7 @@ function addItem(){
     deleteButton.innerHTML = "X";
     itemList.appendChild(deleteButton)
     itemList.removeEventListener("click", exButton)
+    deleteitem()
    
   }
 
