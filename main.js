@@ -1,82 +1,63 @@
-/*
-To help you update the logic, 
-  when a user adds a new todo, 
-  the "addItem" function should:
-1. create the "makeObject"
-2. add the object to your todos array
-3. Call the "addToLocalStorage" 
-to the todos are saved in localStorage.
 
-Second thing to do is to create a "loadTodos" 
-function, that checks if todos exist 
-in localStorage, and if they do, 
-to assign that array to your "todos" variable. 
-No need for an "else".
-Call that function to make sure it runs.
+let deleteButton = document.getElementById("removeItem");
+let addButton = document.getElementById("addItem")
+let listOfToDos = document.getElementById("toDoList");
+let writeSomething = document.getElementById("noOutput");
+let list = JSON.parse(localStorage.getItem('list')) || [];
+document.body.style.backgroundColor = "black";
+document.body.style.color = "white";
 
-With these two, 
-you should be able to 
-add a todo to localStorage now.
-
-Once you have that down, 
-update your "loadTodos" function 
-to have a "for loop" that loops through 
-the array of todos, and displays them on the UI.
-*/
-let todoInput = document.getElementById('todo-input');
-const toDoItemsList = document.getElementById('todo-items');
-let addButton = document.getElementById("add-button")
-let todos = [];
-let button = document.querySelector("input")
-let itemList = document.createElement("li");
-let deleteButton = document.createElement("button");
-
-button.addEventListener('click', function() {
- let todoInput = document.getElementById('todo-input');
- todoInput.value = "";
-});
-
-function addItem(){
-  let itemList = document.createElement("li");
-  itemList.innerText = todoInput.value;
-  toDoItemsList.appendChild(itemList);
-  exButton()
-
-  if(todoInput.value === ""){
-     toDoItemsList.removeChild(itemList);  
-  }
+function showOutput (list, text) {
+  listOfToDos.innerHTML = "";
+  list.map(({text, id}) => {
+    let li = document.createElement("li");
+    let deleteCheck = document.createElement("input");
+    deleteCheck.type = "checkbox";
+    deleteCheck.className = "delete-box";
+    li.setAttribute("id", id);
+    li.className = "item";
+    li.appendChild(document.createTextNode(text));
+    li.appendChild(deleteCheck);
+    listOfToDos.appendChild(li);
+  })
 }
-addButton.addEventListener("click", addItem)
 
+showOutput(list);
 
- itemList.addEventListener("click", exButton)
-  function exButton(){
-    let deleteButton = document.createElement("button");
-    deleteButton.innerHTML = "X";
-    itemList.appendChild(deleteButton)
-    itemList.removeEventListener("click", exButton)
-    deleteButton.addEventListener("click", deleteItem)
-   
-  }
+addButton.addEventListener("click", addItem);
+function addItem() {
+  let userInputValue = document.getElementById("toDoInput").value;
+  let inputId = Math.floor(Math.random() * 100);
 
+  if (userInputValue === "") {
+    writeSomething.innerHTML = "You must enter something.";
+    writeSomething.style.color = "red"
+    return false;
+  } else {//pushing to localstorage
+    list.push({text: userInputValue, id: inputId});
+    localStorage.setItem("list", JSON.stringify(list));
+    writeSomething.innerHTML = "";
+    }
 
-    function deleteItem(){
-      toDoItemsList.removeChild(itemList);
-    } 
-    
-
-  const makeObject = {
-  toDoText: todoInput.value,
-  id: Math.floor(Math.random() * 100),
-};
-
-todos.push(makeObject);
-  
-  function addToLocalStorage(todos) {
-  localStorage.setItem('todos', JSON.stringify(todos));
+  showOutput(list, userInputValue);
+  document.getElementById("toDoInput").value = "";
 }
-function loadToDos(){
-  for (let i = 0; i < todos.length; i++) {
-      
+
+deleteButton.addEventListener("click", deleteItem)
+function deleteItem() {
+  let checkboxes = document.getElementsByClassName("delete-box");
+  let items = document.getElementsByClassName("item");
+
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      checkboxes[i].parentNode.removeChild(checkboxes[i]);
+      items[i].parentNode.removeChild(items[i]);
+      list.splice([i], 1);
+      localStorage.setItem("list", JSON.stringify(list));//
+      writeSomething.innerHTML = "";
+    } else {
+      writeSomething.innerHTML = "Pick something to delete."
+      writeSomething.style.color = "red"
+    }
   }
 }
