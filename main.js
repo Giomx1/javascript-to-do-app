@@ -7,7 +7,7 @@ let list = JSON.parse(localStorage.getItem('list')) || [];
 document.body.style.backgroundColor = "black";
 document.body.style.color = "white";
 
-function showOutput (list, text) {
+function showOutput (list) {
   listOfToDos.innerHTML = "";
   list.map(({text, id}) => {
     let li = document.createElement("li");
